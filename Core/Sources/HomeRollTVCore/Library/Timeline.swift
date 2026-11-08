@@ -9,7 +9,7 @@ struct TimeGroup: Identifiable, Hashable, Sendable {
     let date: Date               // Beginn (Wanduhr)
     let assets: [Asset]          // neueste zuerst
     var key: Asset? { TimelineGrouping.keyPhoto(assets) }
-    /// Häufigster Ort der Gruppe (für „Göppingen“ unter dem Tag/Monat)
+    /// Häufigster Ort der Gruppe (Ortsname unter dem Tag/Monat)
     var place: String? { TimelineGrouping.mainPlace(assets) }
 
     var title: String {
