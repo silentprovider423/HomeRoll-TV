@@ -134,7 +134,7 @@ tools/        icon generator, string catalog, test runner
 
 ## License
 
-[MIT](LICENSE). Third-party: Immich (AGPL-3.0) is not included – HomeRoll TV only talks to its HTTP API. ThumbHash decoding follows Evan Wallace's ThumbHash (MIT).
+[GPL-3.0](LICENSE) (GNU General Public License v3.0; releases up to this change were published under MIT). Third-party: Immich (AGPL-3.0) is not included – HomeRoll TV only talks to its HTTP API. ThumbHash decoding follows Evan Wallace's ThumbHash (MIT).
 
 ---
 
