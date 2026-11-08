@@ -1,0 +1,107 @@
+name: HomeRollTV
+options:
+  bundleIdPrefix: org.homeroll
+  deploymentTarget:
+    tvOS: "26.0"
+  createIntermediateGroups: true
+  developmentLanguage: de
+settings:
+  base:
+    SWIFT_VERSION: "6.0"
+    MARKETING_VERSION: "1.0.0"
+    CURRENT_PROJECT_VERSION: "1"
+    DEVELOPMENT_TEAM: ""
+    CODE_SIGN_STYLE: Automatic
+    SWIFT_EMIT_LOC_STRINGS: YES
+    LOCALIZATION_PREFERS_STRING_CATALOGS: YES
+    ENABLE_USER_SCRIPT_SANDBOXING: YES
+targets:
+  HomeRollTV:
+    type: application
+    platform: tvOS
+    sources:
+      - path: App
+      - path: Core/Sources/HomeRollTVCore
+      - path: Resources
+    dependencies:
+      - target: HomeRollTVTopShelf
+    entitlements:
+      path: App/HomeRollTV.entitlements
+      properties:
+        com.apple.security.application-groups: [group.org.homeroll.tv]
+    info:
+      path: App/Info.plist
+      properties:
+        CFBundleShortVersionString: $(MARKETING_VERSION)
+        CFBundleVersion: $(CURRENT_PROJECT_VERSION)
+        CFBundleDisplayName: HomeRoll TV
+        CFBundleDevelopmentRegion: en
+        CFBundleLocalizations: [en, de]
+        UILaunchScreen: {}
+        UIUserInterfaceStyle: Dark
+        UIRequiredDeviceCapabilities: [arm64]
+        NSLocalNetworkUsageDescription: "Verbindung zu deinem Fotoserver im Heimnetz und Anmeldung per iPhone."
+        CFBundleURLTypes:
+          - CFBundleURLName: org.homeroll.tv
+            CFBundleURLSchemes: [homeroll-tv]
+        NSAppTransportSecurity:
+          NSAllowsLocalNetworking: true
+          NSAllowsArbitraryLoadsInWebContent: false
+    settings:
+      base:
+        PRODUCT_BUNDLE_IDENTIFIER: org.homeroll.tv
+        TARGETED_DEVICE_FAMILY: "3"
+        GENERATE_INFOPLIST_FILE: NO
+        ASSETCATALOG_COMPILER_APPICON_NAME: "App Icon & Top Shelf Image"
+
+  HomeRollTVTopShelf:
+    type: app-extension
+    platform: tvOS
+    sources:
+      - path: TopShelf
+      - path: Core/Sources/HomeRollTVCore
+    entitlements:
+      path: TopShelf/HomeRollTVTopShelf.entitlements
+      properties:
+        com.apple.security.application-groups: [group.org.homeroll.tv]
+    info:
+      path: TopShelf/Info.plist
+      properties:
+        CFBundleShortVersionString: $(MARKETING_VERSION)
+        CFBundleVersion: $(CURRENT_PROJECT_VERSION)
+        CFBundleDisplayName: HomeRoll TV
+        CFBundleDevelopmentRegion: en
+        CFBundleLocalizations: [en, de]
+        NSExtension:
+          NSExtensionPointIdentifier: com.apple.tv-top-shelf
+          NSExtensionPrincipalClass: $(PRODUCT_MODULE_NAME).ContentProvider
+    settings:
+      base:
+        PRODUCT_BUNDLE_IDENTIFIER: org.homeroll.tv.topshelf
+        TARGETED_DEVICE_FAMILY: "3"
+        GENERATE_INFOPLIST_FILE: NO
+
+  HomeRollTVUITests:
+    type: bundle.ui-testing
+    platform: tvOS
+    sources:
+      - path: UITests
+    dependencies:
+      - target: HomeRollTV
+    settings:
+      base:
+        PRODUCT_BUNDLE_IDENTIFIER: org.homeroll.tv.uitests
+        TARGETED_DEVICE_FAMILY: "3"
+        GENERATE_INFOPLIST_FILE: YES
+        TEST_TARGET_NAME: HomeRollTV
+
+schemes:
+  HomeRollTV:
+    build:
+      targets:
+        HomeRollTV: all
+        HomeRollTVUITests: [test]
+    test:
+      targets: [HomeRollTVUITests]
+    run:
+      config: Debug

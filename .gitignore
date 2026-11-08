@@ -1,0 +1,15 @@
+build/
+build-ipa/
+DerivedData/
+Payload/
+*.xcodeproj/
+*.ipa
+.DS_Store
+.build/
+.swiftpm/
+# Geheimes / Eigenes
+.test-account
+.sim-udid
+Resources/HeimnetzCA.der
+*.p12
+*.mobileprovision
