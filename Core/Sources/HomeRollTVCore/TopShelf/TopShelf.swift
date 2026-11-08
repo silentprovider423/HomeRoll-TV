@@ -51,6 +51,8 @@ struct TopShelfSnapshot: Codable, Equatable, Sendable {
         var isMemory = false
     }
     var style: Style = .carousel
+    /// Server, von dem die Bilder stammen (anderes Konto → neu laden)
+    var server: String? = nil
     var memories: [Item] = []
     var photos: [Item] = []
     var updated = Date()
@@ -97,10 +99,10 @@ enum TopShelfFeeder {
     }
 
     /// Schreibt den Schnappschuss. `fetch` lädt ein Vorschaubild (JPEG/WebP) – austauschbar für Tests.
-    static func write(memories: [Memory], photos: [Asset], style: TopShelfSnapshot.Style, folder: URL = TopShelfSnapshot.folder,
-                      fetch: @Sendable (String) async -> Data?) async throws -> TopShelfSnapshot {
+    static func write(memories: [Memory], photos: [Asset], style: TopShelfSnapshot.Style, server: String? = nil,
+                      folder: URL = TopShelfSnapshot.folder, fetch: @Sendable (String) async -> Data?) async throws -> TopShelfSnapshot {
         try FileManager.default.createDirectory(at: folder, withIntermediateDirectories: true)
-        var snap = TopShelfSnapshot(style: style)
+        var snap = TopShelfSnapshot(style: style, server: server)
         func store(_ assetID: String) async -> String? {
             let name = "\(assetID).jpg"
             let dest = folder.appendingPathComponent(name)

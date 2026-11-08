@@ -22,7 +22,7 @@ HomeRoll TV is the tvOS sibling of [HomeRoll](https://github.com/silentprovider4
   <img src="docs/screenshots/6-top-shelf.jpg" width="400" alt="Top Shelf">
   <img src="docs/screenshots/7-sign-in.jpg" width="400" alt="Sign in with QR code">
 </p>
-<p align="center"><sub>Screenshots from the tvOS simulator with a test account (generated test images and public-domain sample photos).</sub></p>
+<p align="center"><sub>Screenshots from the tvOS simulator with a throwaway demo server and public-domain NASA photos (Kennedy Space Center, ISS crew).</sub></p>
 
 ## Features
 

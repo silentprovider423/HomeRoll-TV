@@ -122,7 +122,7 @@ final class HomeRollTVUITests: XCTestCase {
         let field = app.searchFields.firstMatch
         XCTAssertTrue(field.waitForExistence(timeout: 10))
         press(.down, pause: 1)               // Fokus von der Tab-Leiste auf die Tastatur
-        field.typeText("Bali")
+        field.typeText(ProcessInfo.processInfo.environment["FOTOS_SEARCH"] ?? "Bali")
         let tile = app.buttons.matching(NSPredicate(format: "identifier BEGINSWITH 'tile-'")).firstMatch
         XCTAssertTrue(tile.waitForExistence(timeout: 30))
         press(.down, pause: 4)               // in die Treffer, Vorschauen laden lassen
@@ -146,14 +146,10 @@ final class HomeRollTVUITests: XCTestCase {
         Thread.sleep(forTimeInterval: 8)      // Top-Shelf-Vorschauen laden
         press(.home, pause: 3)
         // Fokus auf unser Symbol in der obersten Reihe (links davon nur Einstellungen o. Ä.)
-        let springboard = XCUIApplication(bundleIdentifier: "com.apple.PineBoard")
-        let icon = springboard.buttons["HomeRoll TV"]
-        if icon.waitForExistence(timeout: 5) {
-            for _ in 0..<8 where !icon.hasFocus { press(.left, pause: 0.5) }
-            for _ in 0..<8 where !icon.hasFocus { press(.right, pause: 0.5) }
-        } else {
-            press(.right)
-        }
+        // Der Home-Bildschirm (PineBoard) zeigt seine Symbole nicht in der Bedienhilfen-Struktur → per Position:
+        // ganz nach links, dann FOTOS_SHELF_POS Schritte nach rechts (Standard 1: direkt hinter „Einstellungen“)
+        press(.left, 6, pause: 0.4)
+        press(.right, Int(ProcessInfo.processInfo.environment["FOTOS_SHELF_POS"] ?? "1") ?? 1, pause: 0.6)
         Thread.sleep(forTimeInterval: 6)
         shot("11-topshelf")
         press(.up, pause: 3)                 // ins Top-Shelf-Karussell

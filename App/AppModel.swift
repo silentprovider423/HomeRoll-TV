@@ -143,14 +143,17 @@ final class AppModel {
     /// Vorschauen für den Top Shelf mit unserem Zugang in den Gruppen-Ordner laden (höchstens alle 30 min).
     func refreshTopShelf(force: Bool = false) {
         guard loggedIn, topShelfTask == nil, !timeline.assets.isEmpty else { return }
-        if !force, let u = topShelfUpdated, Date().timeIntervalSince(u) < 1800 { return }
+        let server = client.baseURL?.absoluteString
+        let sameServer = TopShelfSnapshot.load()?.server == server
+        if !force, sameServer, let u = topShelfUpdated, Date().timeIntervalSince(u) < 1800 { return }
+        let force = force || !sameServer
         let client = self.client, style = topShelfStyle
         let mems = memories.items, favs = timeline.favorites.shuffled()
         topShelfTask = Task {
             let random = ((try? await client.random(size: 30)) ?? []).map(\.asset)
             let pick = TopShelfFeeder.pick(memories: mems, favorites: favs, random: random)
             if force { TopShelfSnapshot.clear() }
-            let snap = try? await TopShelfFeeder.write(memories: pick.memories, photos: pick.photos, style: style) { id in
+            let snap = try? await TopShelfFeeder.write(memories: pick.memories, photos: pick.photos, style: style, server: server) { id in
                 guard let url = client.thumbnailURL(id, .preview) else { return nil }
                 return try? await client.data(url)
             }

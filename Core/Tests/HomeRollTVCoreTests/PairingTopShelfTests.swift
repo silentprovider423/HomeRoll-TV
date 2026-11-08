@@ -116,12 +116,13 @@ final class TopShelfTests: XCTestCase {
         let m = Memory(id: "m1", title: "Rom 2024", subtitle: "1. JAN. 2024", assets: [key], key: key, date: key.date)
         try "alt".write(to: { try? FileManager.default.createDirectory(at: folder, withIntermediateDirectories: true); return folder.appendingPathComponent("old.jpg") }(), atomically: true, encoding: .utf8)
         let snap = try await TopShelfFeeder.write(memories: [m], photos: [key, asset("missing", "2024-01-02T10:00:00")],
-                                                  style: .sections, folder: folder) { id in id == "missing" ? nil : png }
+                                                  style: .sections, server: "http://x", folder: folder) { id in id == "missing" ? nil : png }
         XCTAssertEqual(snap.memories.first?.link, "homeroll-tv://memory/m1")
         XCTAssertEqual(snap.photos.map(\.id), ["k"])                 // Foto ohne Bild fällt weg
         XCTAssertEqual(snap.photos.first?.subtitle, "Rom")
         let loaded = try XCTUnwrap(TopShelfSnapshot.load(from: folder))
         XCTAssertEqual(loaded.style, .sections)
+        XCTAssertEqual(loaded.server, "http://x")
         XCTAssertEqual(loaded.memories.count, 1)
         let files = try FileManager.default.contentsOfDirectory(atPath: folder.path).sorted()
         XCTAssertEqual(files, ["k.jpg", "snapshot.json"])            // alte Bilder aufgeräumt
